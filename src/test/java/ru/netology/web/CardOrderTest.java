@@ -76,5 +76,29 @@ public void setUp() {
         $("[type=button]").click();
         $("[data-test-id=order-success]").shouldHave(exactText("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время."));
     }
+    @Test
+    void shouldTestNameInRussianWithNumbers() {
+        $("[data-test-id=name] input").setValue("Василь1 Алибабаевич");
+        $("[data-test-id=phone] input").setValue("+79270000000");
+        $("[data-test-id=agreement]").click();
+        $("[type=button]").click();
+        $("[class=input__sub]").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+    }
+    @Test
+    void shouldTestNameInRussianWithSpecialCharacters() {
+        $("[data-test-id=name] input").setValue("Василь%#! Алибабаевич");
+        $("[data-test-id=phone] input").setValue("+79270000000");
+        $("[data-test-id=agreement]").click();
+        $("[type=button]").click();
+        $("[class=input__sub]").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+    }
+    @Test
+    void shouldTestPhoneIsNotValid2() {
+        $("[data-test-id=name] input").setValue("Василий Алибабаевич");
+        $("[data-test-id=phone] input").setValue("+###927000%####!!!!");
+        $("[data-test-id=agreement]").click();
+        $("[type=button]").click();
+        $("[data-test-id=phone] [class =input__sub]").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+    }
 }
 
